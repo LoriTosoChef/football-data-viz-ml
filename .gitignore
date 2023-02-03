@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+.db/
+.data/
+
+>>>>>>> 3e40d84... update .gitignore
 # History files
 .Rhistory
 .Rapp.history
