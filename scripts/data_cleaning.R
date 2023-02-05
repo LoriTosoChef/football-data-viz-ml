@@ -3,6 +3,7 @@ gc()
 
 library("arrow")
 library("dplyr")
+library("tidyverse")
 
 # Reading files ----------------------------------------------------------------
 
@@ -112,8 +113,6 @@ team_stats$date <- as.numeric(format(as.Date(team_stats$date, format = "%Y-%m-%d
 match$season_year <- as.numeric(substr(match$season, 1,4))
 match <- match %>% relocate(season_year, .after = season)
 
-#TODO check potential player observation missing for given years, same for teams
-
 # Summaries --------------------------------------------------------------------
 
 # league goals
@@ -133,10 +132,39 @@ summary_league_season <- match %>%
             total_goals = sum(home_team_goal + away_team_goal)) %>%
   arrange(league, desc(season))
 
-#TODO Player summary
-# player_stats %>%
-#   left_join(player %>% select(player_api_id, player_name, birthday), by = c('player_api_id' = 'player_api_id')) %>%
-#   relocate(c(player_name, birthday), .before = date) %>%
-#   select(-player_api_id)
+# Player summary
+summary_player <- player_stats %>%
+  left_join(player %>% select(player_api_id, player_name, birthday), by = c('player_api_id' = 'player_api_id')) %>%
+  relocate(c(player_name, birthday), .before = date) %>%
+  select(-player_api_id) %>%
+  group_by(player_name) %>%
+  summarize(avg_overall_rating = mean(overall_rating),
+            avg_potential = mean(potential),
+            avg_potential_diff = mean(potential - overall_rating),
+            max_rating = max(overall_rating),
+            min_rating = min(overall_rating),
+            preferred_foot = names(which.max(table(preferred_foot)))) %>%
+  arrange(desc(avg_overall_rating), player_name)
 
 #TODO Team summary
+team_summary <- team_stats %>%
+  left_join(team %>% select(team_api_id, team_long_name), by = c('team_api_id' = 'team_api_id')) %>%
+  left_join(match %>% select(home_team_api_id, league_id), by = c('team_api_id' = 'home_team_api_id')) %>%
+  left_join(league %>% select(id, name), by = c('league_id' = 'id'), suffix = c('', '')) %>%
+  relocate(c(team_long_name, name), .before = date) %>%
+  select(-team_api_id, -league_id) %>%
+  group_by(team_long_name) %>%
+  drop_na() %>%
+  summarize(league_name = names(which.max(table(name))),
+            buildUpPlaySpeed = mean(buildUpPlaySpeed), buildUpPlaySpeedClass = names(which.max(table(buildUpPlaySpeedClass))),
+            buildUpPlayPassing = mean(buildUpPlayPassing), buildUpPlayPassingClass = names(which.max(table(buildUpPlayPassingClass))),
+            buildUpPlayPositioningClass = names(which.max(table(buildUpPlayPositioningClass))),
+            chanceCreationPassing = mean(chanceCreationPassing), chanceCreationPassingClass = names(which.max(table(chanceCreationPassingClass))),
+            chanceCreationCrossing = mean(chanceCreationCrossing), chanceCreationCrossingClass = names(which.max(table(chanceCreationCrossingClass))),
+            chanceCreationShooting = mean(chanceCreationShooting), chanceCreationShootingClass = names(which.max(table(chanceCreationShootingClass))),
+            chanceCreationPositioningClass = names(which.max(table(chanceCreationPositioningClass))),
+            defencePressure = mean(defencePressure), defencePressureClass = names(which.max(table(defencePressureClass))),
+            defenceAggression = mean(defenceAggression), defenceAggressionClass = names(which.max(table(defenceAggressionClass))),
+            defenceTeamWidth = mean(defenceTeamWidth), defenceTeamWidthClass = names(which.max(table(defenceTeamWidthClass))),
+            defenceDefenderLineClass = names(which.max(table(defenceDefenderLineClass)))) %>%
+  arrange(desc(league_name))
