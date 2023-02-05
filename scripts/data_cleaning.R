@@ -146,7 +146,7 @@ summary_player <- player_stats %>%
             preferred_foot = names(which.max(table(preferred_foot)))) %>%
   arrange(desc(avg_overall_rating), player_name)
 
-#TODO Team summary
+# Team summary
 team_summary <- team_stats %>%
   left_join(team %>% select(team_api_id, team_long_name), by = c('team_api_id' = 'team_api_id')) %>%
   left_join(match %>% select(home_team_api_id, league_id), by = c('team_api_id' = 'home_team_api_id')) %>%
