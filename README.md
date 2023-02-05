@@ -1,7 +1,7 @@
 # Football Data Vizualization and Prediction Exam Project
 
 Exam individual project. Aims of the project:
-- Refining R language skills
+- Refine R language skills
 - Improve plotting
 
 ## Data source
