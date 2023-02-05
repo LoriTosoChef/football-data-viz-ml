@@ -3,8 +3,9 @@ gc()
 library("dplyr")
 library("tidyverse")
 
-# Ternary Classification Problem: Win H - Win A - Draw -------------------------
+# Multi-Class Classification: Win H - Win A - Draw -----------------------------
 
+## Overall Ratings Only --------------------------------------------------------
 # first attempt, without betting odds columns;
 # only using average overall rating of each team
 
@@ -84,3 +85,5 @@ dataset_player_overall <- dataset_player_overall %>%
          -overall_rating_a5, -overall_rating_a6, -overall_rating_a7, -overall_rating_a8, -overall_rating_a9, 
          -overall_rating_a10, -home_team_api_id, -away_team_api_id, -season_year) %>%
   relocate(overall_rating_A, overall_rating_H, .before = target)
+
+# Ternary Classification Problem: Win H - Win A - Draw -------------------------

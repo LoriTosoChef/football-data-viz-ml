@@ -11,10 +11,12 @@ set.seed(seed = 42)
 
 setDT(dataset_player_overall)
 
+DF <- dataset_player_overall
+
 # Train Test Split 75-25
-test_index <- createDataPartition(dataset_player_overall$target, p=0.75, list=FALSE)
-test <- dataset_player_overall[-test_index,]
-training <- dataset_player_overall[test_index,]
+test_index <- createDataPartition(DF$target, p=0.75, list=FALSE)
+test <- DF[-test_index,]
+training <- DF[test_index,]
 
 # Use 5 folds in standard cross validation
 k <- 5
