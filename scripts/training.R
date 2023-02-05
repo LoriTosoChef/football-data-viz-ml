@@ -17,7 +17,7 @@ test <- dataset_player_overall[-test_index,]
 training <- dataset_player_overall[test_index,]
 
 # Use 5 folds in standard cross validation
-k <- 2
+k <- 5
 control <- trainControl(method = "cv", number = k)
 metric <- "Accuracy"
 
