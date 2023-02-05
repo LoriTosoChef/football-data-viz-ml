@@ -86,4 +86,4 @@ dataset_player_overall <- dataset_player_overall %>%
          -overall_rating_a10, -home_team_api_id, -away_team_api_id, -season_year) %>%
   relocate(overall_rating_A, overall_rating_H, .before = target)
 
-# Ternary Classification Problem: Win H - Win A - Draw -------------------------
+## Overall and GK Ratings ------------------------------------------------------
