@@ -1,7 +1,9 @@
 gc()
 
+
 library('caret')
 library('e1071')
+library('gbm')
 library('xgboost')
 library('data.table')
 
@@ -15,7 +17,7 @@ test <- dataset_player_overall[-test_index,]
 training <- dataset_player_overall[test_index,]
 
 # Use 5 folds in standard cross validation
-k <- 5
+k <- 2
 control <- trainControl(method = "cv", number = k)
 metric <- "Accuracy"
 
@@ -40,8 +42,7 @@ rm(svm2, svm1)
 # XGB with default parameters
 xgb1 <- Sys.time()
 fit.xgb <- train(target ~ ., data = training, 
-                 method = "gbm", distribution = 'multinomial', shrinkage = 0.1, n.trees = 1000, 
-                 metric = metric, trControl = control)
+                 method = "xgbTree", metric = metric, trControl = control)
 xgb2 <- Sys.time()
 xgb2 - xgb1
 rm(xgb2, xgb1)
